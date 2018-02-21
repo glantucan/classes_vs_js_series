@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DomUtils test</title>
+    <meta name="description" content="Renderer obstraction test">
+    <meta name="author" content="Glantucan">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+    <script src="js/dom.js"></script>
+    <script>
+        var renderer = domUtils;
+        var toggable = renderer.createElement({
+            tag: 'img', 
+            attr: {src:'imgs/testImg.jpg'},
+            classes:'test-img'
+        });
+        renderer.appendElement(document.body, {
+            tag: 'div',
+            classes: 'dom-renderer-test',
+            contents : [
+                { tag: 'p', contents: 'Hello world!' },
+                toggable,
+                { tag: 'div', classes: 'button', contents: 'Click me!',
+                  buttonAction: function(ev){
+                      renderer.toggleVisibility(toggable);
+                  }}
+            ]
+        });
+    </script>
+</body>
+</html>
