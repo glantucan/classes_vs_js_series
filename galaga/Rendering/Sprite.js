@@ -34,7 +34,7 @@ class Sprite {
         sprite._parent = this;
         sprite._ctx = this._ctx;
         sprite.scale = this._s;
-
+        console.log(sprite.scale);
         if (sprite._useCache) {
             sprite._cache.stageContext = this._ctx;
             this.drawOnCache();
@@ -98,12 +98,15 @@ class Sprite {
         );
     }
 
+    get scale() {
+        return this._s;
+    }
     set scale(val) {
         this._s = val;
         this._dirty = true;
         this._children.forEach(
             function(child) {
-                child.scale *= ratio;
+                child.scale *= val;
                 child._dirty = true;
             }
         );

@@ -40,6 +40,7 @@ class GameObject {
         this._sprite.y = val;
     }
 
+    // These should return the size of the bounding-box
     get width() {
         return this._sprite.width;
     }
@@ -48,10 +49,10 @@ class GameObject {
         return this._sprite.height;
     }
     
+    // Not sure whether these should be setable
     set width(val) {
         this._sprite.width = val;
     }
-
     set height(val) {
         this._sprite.height = val;
     }

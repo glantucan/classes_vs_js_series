@@ -7,7 +7,7 @@ import Game from './GameEngine/Game.js';
 import Stars from './Sprites/Stars.js';
 
 var stage = new Stage('galaga', 450, 800);
-stage.fillWindow(9/16);
+stage.scale(Stage.FIT);
 
 var stars =  new Stars()
 var ship1sp = new ShipSprite(true);
@@ -23,7 +23,7 @@ stage.addChild(heroShipSp);
 
 var game = new Game(stage);
 var ship1 = new Ship(ship1sp, 30, 45);
-var heroShip = new Ship(heroShipSp, 80, 120);
+var heroShip = new Ship(heroShipSp, 80, 80);
 //ship2.v = {x:1, y:2}; 
 game.add(ship1);
 game.add(heroShip);

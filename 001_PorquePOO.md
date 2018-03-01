@@ -71,12 +71,20 @@ Puedes llamar al método en el padre de otra forma y no hacer shadowing pero eso
 
 Construyes el juego pensando en una resolución 600x800, como dice las especs.
 
-### Primer problema.
+### Weirdness
+
+* No hay propiedades ni métodos privados. Tampoco tenemos `protected`. Podemos emular `private` con *getters* y variables no exportadas en el módulo, pero es salirnos de la sintaxis típica de los lenguajes orientados a clases, aparte de que nos salimos del contexto del paradigma al usar clausuras.
+* Tampoco tenemos propiedades estáticas que son útiles para crear constantes de configuración (ver Stage en relación al método scale). Lo único que podemos hacer es crear *getters* estáticos.
+
+
+### Primer problema
+
 Cuando lo tienes terminado te dicen que tiene que ser responsive y adaptarse al tamaño de la pantalla -> Ups!!!
 Todos los tamaños relativos.
 
 
-### Segundo problema.
+### Segundo problema
+
 Ups -> En pantallas grandes el canvas es enorme y redibujar todo en cada frame es tremendamente ineficiente
 
 Método draw() será llamado por Sprite.render() para cada instancia en cada frame.
