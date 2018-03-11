@@ -2,21 +2,20 @@
 /**
  * Creates an object with the following prototype chain:
  * 
- *      ╾ dataObj
- * 
- *      ┭ dataWrapper
- *      ┆   ┡ reqProp_1
+ *      ┭ roleObjBehavior
+ *      ┆   ┡ behaviour_1
  *      ┆   ┝ ...
- *      ┆   ┕ reqProp_N
+ *      ┆   ┕ behaviour_N
  *      ┽ roleObj
  *      ┆   ┝ self
  *      ┆   ┝ decompose
  *      ┆   ┝ swap
  *      ┆   ┕ compose
- *      ┵ roleObjBehavior
- *          ┡ behaviour_1
+ *      ┵ dataWrapper
+ *          ┡ reqProp_1
  *          ┝ ...
- *          ┕ behaviour_N
+ *          ┕ reqProp_N
+ *          ╾ dataObj
  * 
  * @param {*} dataObj 
  * @param {*} roleBehaviorObj 

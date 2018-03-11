@@ -2,7 +2,6 @@ import createTrader from './Trader.js';
 import createBuy from './buy.js';
 import createBuyContext from './buy.js';
 
-console.log('hello'); 
 var personA = {
     name: 'Ruyman',
     stock: {
