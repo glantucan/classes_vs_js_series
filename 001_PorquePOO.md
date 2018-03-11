@@ -77,6 +77,33 @@ Construyes el juego pensando en una resolución 600x800, como dice las especs.
 * Tampoco tenemos propiedades estáticas que son útiles para crear constantes de configuración (ver Stage en relación al método scale). Lo único que podemos hacer es crear *getters* estáticos.
 
 
+## Problemas con el constructor
+No puedes asignar propiedades antes de llamar a super() en una subclase.
+
+En `Stars`, lo lógico hubiera sido crear los objetos de definición para la posición de las estrellas en el constructor. Pero no podemos antes de llamar a `super()`, pero el constructor de `Sprite` llama a `draw()`, para crear el cache de renderizado en el momento de instanciar cualquier sprite, y `draw()` en esta implementación concreta de `Sprite` necesita que la propiedad `stars` esté inicializada.
+No hay más salida que dar un rodeo que considero bastante horroroso:
+
+```js
+draw() {
+    if (!this._stars) {
+        this.stars = [];
+        for (var i = 0; i < 500; i++) {
+            this.stars[i] = {
+                x: Math.random() * this._w,
+                y: Math.random() * this._h,
+                radius: Math.sqrt(Math.random() * 2),
+                alpha: 1.0,
+                decreasing: true,
+                dRatio: Math.random()*0.05
+            };
+        }
+    }
+
+    // ...
+
+```
+
+
 ### Primer problema
 
 Cuando lo tienes terminado te dicen que tiene que ser responsive y adaptarse al tamaño de la pantalla -> Ups!!!

@@ -5,7 +5,7 @@
  */
 class CachedCanvas {
 
-    constructor(width = 600, height = 300) {
+    constructor(width = 300, height = 300) {
         // the canvas we draw in
         this._tempCanvas = document.createElement('canvas');
         this._tempCtx = this._tempCanvas.getContext('2d');
@@ -74,6 +74,9 @@ class CachedCanvas {
      */
     drawFrame(idx, destination) {
         var frame = this._frames[idx];
+        if (! this._stageCtx){
+            console.log(this);
+        }
         this._stageCtx.drawImage( 
             this._canvas, frame.x, frame.y, frame.width, frame.height, 
             destination.x, destination.y, frame.width, frame.height);

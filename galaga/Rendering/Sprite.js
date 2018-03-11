@@ -1,25 +1,25 @@
 //import Stage from './Stage.js';
 import CachedCanvas from './CachedCanvas.js';
 
+var _DEBUG = false;
+
 class Sprite {
-    constructor (useCache = false, cacheConf = {
-            width: 500,
-            height: 150}) {
-        
-        this._useCache = useCache;
-        this._cache = null;
+    static set DEBUG(val) {
+        _DEBUG = val;
+    }
 
-        if (useCache) {
-            this._cache = new CachedCanvas(cacheConf.width, cacheConf.height);
-        }
-
-        this._w, this._h;
+    constructor (width, height) {
+        this._w = width;
+        this._h = height;
         this._s = {x:1, y:1};
         this._x = 0;
         this._y = 0;
         this._children = [];
         this._parent = null;
         this._dirty = false;
+        this._cache = new CachedCanvas(width, height);
+        this.draw();
+        
     }
 
     /**
@@ -34,19 +34,55 @@ class Sprite {
         sprite._parent = this;
         sprite._ctx = this._ctx;
         sprite.scale = this._s;
-        console.log(sprite.scale);
-        if (sprite._useCache) {
+        
+        // If this sprite is already on the stage tell its new child's cache which is the stage context. Needed for final rendering (copying from cache to the visible canvas of the stage)
+        if (this._ctx) {
             sprite._cache.stageContext = this._ctx;
-            this.drawOnCache();
+            sprite.onContextSet();
         }
 
-        sprite.onAdded();
+        sprite.onAddedToSprite();
     }
 
+    onContextSet() {
+        this._children.forEach(
+            function(child) {
+                this._cache.stageContext = this._ctx;
+                child.onContextSet();
+                child.onAddedToStage();
+            }
+        );
+
+    }
+    /**
+     *  Abstract method. Override it if your concrete sprite needs any initialization or
+     *  resetting when added to another sprite as a child
+     * @param {Sprite} parent The parent sprite this one is being added to. 
+     */
+    onAddedToSprite(parent) {}
+
+    /**
+     *  Abstract method. Override it if your concrete sprite needs any initialization or
+     *  resetting when added to another sprite as a child
+     */
+    onAddedToStage() {}
+
+    /**
+     * Remove a sprite from this one's children sprite list, so that it won't be rendered anymore.
+     * @param {Sprite} sprite The sprite to be removed from this one sprite list
+     */
     removeChild(sprite) {
         var spIdx = this._children.indexOf(sprite);
         this._children.splice(spIdx, 1);
+        sprite.onRemoved(this);
     }
+
+    /**
+     *  Abstract method. Override it if your concrete sprite needs any initialization or
+     *  resetting when added to another sprite as a child
+     * @param {Sprite} parent  The parent sprite this one is being removed from. 
+     */
+    onRemoved(parent) {}
 
     get x() {
         return this._x;
@@ -112,37 +148,49 @@ class Sprite {
         );
     }
 
-    /** 
-     * Abstract method with the off-canvas drawing instructions
-     */
-    drawOnCache() {}
-
     /**
      *  Abstract method with the canvas drawing instructions to be implemented
      *  by child classes
      */
-    draw(origin) {}
+    draw() {}
 
-    /**
-     *  Abstract method with the initailization to be made when adding to the 
-     *  stage, to be implemented by child classes
-     */
-    onAdded(){}
+    drawFromCache(origin) {
+        this._ctx.save();
+        this._cache.drawNextFrame(origin);
+        this._ctx.restore();
+    }
+
+   
     
-
+    /** 
+     * Renders the sprite contents to the canvas. It also calls render on each sprite
+     * children if it has any.
+     */
     render() {
         if (this._dirty) {
-            this.drawOnCache();
+            this.draw();
             this._dirty = false;
         }
-        this.draw(this._getOrigin());
+        // Even if it uses cache, child sprites are rendered on their own. 
+        // TODO: Consider caching also the children if needed for performance.
         this._children.forEach( 
             (child) => { child.render(); } 
         );
+
+        if (_DEBUG) {
+            //this._ctx.save();
+            this._ctx.lineWidth = 1;
+            this._ctx.strokeStyle = "blue";
+            this._ctx.strokeRect(this.x + 1, this.y + 1, this.width - 2, this.height - 2);
+            
+            //this._ctx.restore();
+        }
     }
 
-    
-    _getOrigin() {
+    /** 
+     * Get top left corner position of this sprite accounting for ancestors position and scaling.
+     */
+    getOrigin() {
         var absPos;
         // I prefer not to need to do reflection
         //if (!(this instanceof Stage)) {

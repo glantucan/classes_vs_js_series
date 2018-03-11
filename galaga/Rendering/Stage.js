@@ -13,7 +13,7 @@ class Stage extends Sprite {
     }
     
     constructor (canvas_id, width, height) {
-        super();
+        super(width, height);
         this._canvasEl = document.getElementById('galaga');
         this._ctx = this._canvasEl.getContext("2d");
         this._canvasEl.width = width;
@@ -91,7 +91,9 @@ class Stage extends Sprite {
         console.log('stage._s:', this._s);
     }
 
+
     render() {
+        // As this is the parent of all sprites it's responsible for clearing the canvas on each frame.
         this._ctx.clearRect(this._x, this._y, this.width, this.height);
         super.render();
     }

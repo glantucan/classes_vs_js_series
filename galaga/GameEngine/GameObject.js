@@ -1,10 +1,8 @@
 
 class GameObject {
 
-    constructor(sprite, width, height) {
+    constructor(sprite) {
         this._sprite = sprite;
-        this.width = width;
-        this.height = height;
         this._v = {x:0, y:0};
     }
 
@@ -44,18 +42,17 @@ class GameObject {
     get width() {
         return this._sprite.width;
     }
-
     get height() {
         return this._sprite.height;
     }
     
-    // Not sure whether these should be setable
-    set width(val) {
-        this._sprite.width = val;
+    get sprite () {
+        return this._sprite;
     }
-    set height(val) {
-        this._sprite.height = val;
+    set sprite(val) {
+        this._sprite = val;
     }
+
     /**
      * Abstract method that will be called by the Game on every frame
      * @param {number} tFrame 
